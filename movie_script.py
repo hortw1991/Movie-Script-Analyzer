@@ -11,27 +11,27 @@ brain juices flowing before classes started, and IMSDb does not have an API,
 and it's search results do not change the URL, meaning you can't just feed
 it query parameters.
 
-Usage:  python [optional flags] -m movie/url
+usage:  python [optional flags] -m movie/url
 
-	--search  Optional flag that indicates you want to search and the program 
-			  will return the top movie hit.  Results not guaranteed.
+	--search  optional flag that indicates you want to search and the program 
+			  will return the top movie hit.  results not guaranteed.
 
-	--intact  Optional flag that will actually just retrieve a script for you
-			  without performing any input.  This will print the script as
+	--intact  optional flag that will actually just retrieve a script for you
+			  without performing any input.  this will print the script as
 			  written by the writer and render and further commands irrelevant
-			  as they rely on eliminating whitespace.  This can be used with 
+			  as they rely on eliminating whitespace.  this can be used with 
 			  the --save flag to produce {movie}_intact_script.txt
 
-	--save    Optional flag that will save the output to directory with a file
+	--save    optional flag that will save the output to directory with a file
 	 		  name {movie}_{command}.txt
 	
-	--reverse Optional flag that will reverse the command output.
+	--reverse optional flag that will reverse the command output.
 
-	--command Optional but reccomended command to peform.  See the WordAnalyzer 
-	          class for a list of options.  Default is to return an alphabetized 
-			  list.  This command supports multiple sequential arguments.
+	--command optional but reccomended command to peform.  see the wordanalyzer 
+	          class for a list of options.  default is to return an alphabetized 
+			  list.  this command supports multiple sequential arguments.
 
-	--movie   [REQUIRED] The movie to return.  
+	--movie   [required] the movie to return.  
 """
 
 from word_analyzer import WordAnalyzer
