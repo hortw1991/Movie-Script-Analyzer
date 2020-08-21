@@ -14,5 +14,7 @@ class WordAnalyzer:
 		self.save = save
 		self.save_location = save_location
 
+	def alphabetize(self):
+		print("hello!")
 
 		

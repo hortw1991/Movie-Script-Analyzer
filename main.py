@@ -25,6 +25,7 @@ Usage:  python [optional flags] -m movie/url
 *  You must put your own webdriver in your own path.
 ****************************************************************************
 """
+from word_analyzer import WordAnalyzer
 
 from bs4 import BeautifulSoup
 from googlesearch import search
