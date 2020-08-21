@@ -29,4 +29,5 @@ class WordAnalyzer:
 				word_freq[word] = 1
 
 		return word_freq
-		
+
+
