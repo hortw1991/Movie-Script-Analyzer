@@ -59,6 +59,8 @@ def main(args):
 	else:
 		# Check for the type of output - default is to print it in alphabetical
 		script_words = get_words(script_text)
+		analyzer = WordAnalyzer(script_words)
+		print(analyzer.word_count())
 
 
 def search_movie(base_url, movie):

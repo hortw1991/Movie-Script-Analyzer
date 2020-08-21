@@ -1,6 +1,9 @@
 '''
 Performs various basic word analysis on an input of a list of words.
 
+Available Keyword Arguments:
+- reverse=True
+
 Current Functionality:
 - Alphabetize: returns an alphabetically sorted list
 - Word Count:  returns a dictionary containing the frequency of words
@@ -8,13 +11,22 @@ Current Functionality:
 
 '''
 class WordAnalyzer:
-	def __init__(self, words, flag='alphabetize', save=False, save_location=None):
+	def __init__(self, words, *args, **kwargs):
 		self.words = words
-		self.flag = flag
-		self.save = save
-		self.save_location = save_location
+		word = self.alphabetize()
+		print(word)
 
 	def alphabetize(self):
-		print("hello!")
+		return sorted(self.words)
 
+	def word_count(self):
+		word_freq = {}
+
+		for word in self.words:
+			if word in word_freq.keys():
+				word_freq[word] += 1
+			else:
+				word_freq[word] = 1
+
+		return word_freq
 		
