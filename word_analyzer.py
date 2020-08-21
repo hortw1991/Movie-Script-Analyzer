@@ -14,7 +14,7 @@ class WordAnalyzer:
 	def __init__(self, words, *args, **kwargs):
 		self.words = words
 		word = self.alphabetize()
-		print(word)
+		
 
 	def alphabetize(self):
 		return sorted(self.words)

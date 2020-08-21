@@ -15,10 +15,21 @@ Usage:  python [optional flags] -m movie/url
 
 	--search  Optional flag that indicates you want to search and the program 
 			  will return the top movie hit.  Results not guaranteed.
+
 	--intact  Optional flag that will actually just retrieve a script for you
-			  without dummifying it.  This will not invoke any 
-	--save    Optional flag that will save the output to a file.
-	--movie   [REQUIRED] The movie to return.
+			  without performing any input.  This will print the script as
+			  written by the writer and render and further commands irrelevant
+			  as they rely on eliminating whitespace.  This can be used with 
+			  the --save flag to produce {movie}_intact_script.txt
+
+	--save    Optional flag that will save the output to directory with a file
+	 		  name {movie}_{command}.txt
+
+	--command Command to peform.  See the WordAnalyzer class for a list of 
+			  options.  Default is to return an alphabetized list.
+
+	--movie   [REQUIRED] The movie to return.  To run this with a variable amount
+	  		  of arguments separate them with a | character.
 
 ** WARNING *****************************************************************
 *  This has only been tested with geckodriver for mozilla on windows/macOS.
@@ -55,13 +66,12 @@ def main(args):
 	if args.intact:
 		print_result(script_text)
 		if args.save:
-			save_result(script_text, args.file_location)
+			save_result(script_text, args.movie, args.save)
 	else:
-		# Check for the type of output - default is to print it in alphabetical
+		# Check for the type of command - default is to print it in alphabetical
 		script_words = get_words(script_text)
 		analyzer = WordAnalyzer(script_words)
-		print(analyzer.word_count())
-
+		
 
 def search_movie(base_url, movie):
 	'''
@@ -125,9 +135,16 @@ def get_words(script_text):
 	return words
 
 
-def save_result(text, file_location):
+def save_result(text, movie_name, save_location):
 	""" Saves the output to a file line by line. """
-	with open(file_location, 'w+') as f:
+	if not os.path.isdir(save_location):
+		print("Please enter a directory!")
+		sys.exit(0)
+	
+	file_name = f'{movie_name}_intact_script.txt'
+	save_path = os.path.join(save_location, file_name)
+
+	with open(save_path, 'w+') as f:
 		for line in text:
 			f.write(line)
 
