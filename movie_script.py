@@ -24,18 +24,16 @@ Usage:  python [optional flags] -m movie/url
 
 	--save    Optional flag that will save the output to directory with a file
 	 		  name {movie}_{command}.txt
+	
+	--reverse Optional flag that will reverse the command output.
 
-	--command Command to peform.  See the WordAnalyzer class for a list of 
-			  options.  Default is to return an alphabetized list.
+	--command Optional but reccomended command to peform.  See the WordAnalyzer 
+	          class for a list of options.  Default is to return an alphabetized 
+			  list.  This command supports multiple sequential arguments.
 
-	--movie   [REQUIRED] The movie to return.  To run this with a variable amount
-	  		  of arguments separate them with a | character.
-
-** WARNING *****************************************************************
-*  This has only been tested with geckodriver for mozilla on windows/macOS.
-*  You must put your own webdriver in your own path.
-****************************************************************************
+	--movie   [REQUIRED] The movie to return.  
 """
+
 from word_analyzer import WordAnalyzer
 
 from bs4 import BeautifulSoup
@@ -66,11 +64,33 @@ def main(args):
 	if args.intact:
 		print_result(script_text)
 		if args.save:
-			save_result(script_text, args.movie, args.save)
+			save_intact_result(script_text, args.movie, args.save)
 	else:
 		# Check for the type of command - default is to print it in alphabetical
 		script_words = get_words(script_text)
-		analyzer = WordAnalyzer(script_words)
+		analyzer = WordAnalyzer(script_words, args.movie, save=args.save, reverse=args.reverse)
+
+		# List of available commands that will call the function if exists in
+		# the WordAnalyzer class.
+		commands = {
+			'alphabetize': analyzer.alphabetize,
+			'word-count': analyzer.word_count
+		}
+
+		if not args.command:
+			print_result(analyzer.alphabetize())
+		else:
+			for command in args.command:
+				if command not in commands.keys():
+					print("Error executing command.  Make sure it exists!")
+					continue
+				# Get result and save if requested
+				output = commands[command]()
+
+				print_result(output)
+
+				if args.save:
+					save_command_result(output, command, args.movie, args.save)
 		
 
 def search_movie(base_url, movie):
@@ -135,7 +155,7 @@ def get_words(script_text):
 	return words
 
 
-def save_result(text, movie_name, save_location):
+def save_intact_result(text, movie_name, save_location):
 	""" Saves the output to a file line by line. """
 	if not os.path.isdir(save_location):
 		print("Please enter a directory!")
@@ -149,23 +169,59 @@ def save_result(text, movie_name, save_location):
 			f.write(line)
 
 
+def save_command_result(text, command, movie_name, save_location):
+	""" Saves the output to a file line by line. """
+	if not os.path.isdir(save_location):
+		print("Please enter a directory!")
+		sys.exit(0)
+	
+	file_name = f'{movie_name}_{command}_script.txt'
+	save_path = os.path.join(save_location, file_name)
+
+	with open(save_path, 'w+') as f:
+		# Check if it is a dictionary
+		if isinstance(text, dict):
+			for k, v in text.items():
+				f.write(f'{k}: {v}')
+		else:
+			for line in text:
+				print(line)
+				f.write(line)
+
+
 def print_result(text):
-	for line in text:
-		print(line)
+		if isinstance(text, dict):
+			for k, v in text.items():
+				print(f'{k}: {v}')
+		else:
+			for line in text:
+				print(line)
 
 
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--search', action='store_true',
 						help='An optional flag that retrieves the top search result.')
+
 	parser.add_argument('--intact', action='store_true',
-						help='An optional flag that will not dummify the result and\
-							  will leave the script intact.')
+						help='An optional flag that will not analyze the result and\
+							  will leave the script intact with whitespace.')
+
+	parser.add_argument('--reverse', action='store_true',
+						help='An optional flag that reverses the output order.')
+
 	parser.add_argument('--save', action='store', type=str,
-	                    help='An optional file location to save the output to.')
+	                    help='An optional flag indicating directory to save the output to.')
+
+	parser.add_argument('--command', action='store', type=str, nargs='*',
+						help='An optional but recommended argument that defaults\
+							  to return an alphabetized list of words in the script.  \
+							  See the WordAnalyzer class for commands.')
+
 	parser.add_argument('--movie', action='store', type=str, required=True,
 						help='The URL to the movie script, or the desired search term\
 							  if the --s flag is set.')
+
 	args = parser.parse_args()
 	main(args)	
 
