@@ -15,7 +15,7 @@ Why not?
 ## Usage
 
 ```
-python [optional flags] -m movie/url
+python movie_script.py [optional flags] -m movie/url
 
 	--search  Optional flag that indicates you want to search and the program 
 			  will return the top movie hit.  Results not guaranteed.
