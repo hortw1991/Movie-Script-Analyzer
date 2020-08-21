@@ -45,12 +45,13 @@ import os
 
 def main(args):
 	base_url = r'https://www.imsdb.com/'
+	movie_name = ' '.join(args.movie)
 
 	# Retrieve the URL
 	if args.search:
-		url = search_movie(base_url, args.movie)
+		url = search_movie(base_url, movie_name)
 	else:
-		url = args.movie
+		url = movie_name
 	
 	r = requests.get(url)
 	if r.status_code != 200:
@@ -64,11 +65,11 @@ def main(args):
 	if args.intact:
 		print_result(script_text)
 		if args.save:
-			save_intact_result(script_text, args.movie, args.save)
+			save_intact_result(script_text, movie_name, args.save)
 	else:
 		# Check for the type of command - default is to print it in alphabetical
 		script_words = get_words(script_text)
-		analyzer = WordAnalyzer(script_words, args.movie, save=args.save, reverse=args.reverse)
+		analyzer = WordAnalyzer(script_words, movie_name, save=args.save, reverse=args.reverse)
 
 		# List of available commands that will call the function if exists in
 		# the WordAnalyzer class.
@@ -90,7 +91,7 @@ def main(args):
 				print_result(output)
 
 				if args.save:
-					save_command_result(output, command, args.movie, args.save)
+					save_command_result(output, command, movie_name, args.save)
 		
 
 def search_movie(base_url, movie):
@@ -199,6 +200,7 @@ def print_result(text):
 
 
 if __name__ == "__main__":
+
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--search', action='store_true',
 						help='An optional flag that retrieves the top search result.')
@@ -218,7 +220,7 @@ if __name__ == "__main__":
 							  to return an alphabetized list of words in the script.  \
 							  See the WordAnalyzer class for commands.')
 
-	parser.add_argument('--movie', action='store', type=str, required=True,
+	parser.add_argument('--movie', action='store', type=str, required=True, nargs='*',
 						help='The URL to the movie script, or the desired search term\
 							  if the --s flag is set.')
 

@@ -38,3 +38,4 @@ class WordAnalyzer:
 		return word_freq
 
 
+
