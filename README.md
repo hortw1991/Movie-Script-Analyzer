@@ -4,13 +4,11 @@
 
 This script retrieves movies from IMDBs.  You can either specify a full URL or add a search flag and it will retrieve the top google result.
 
+Please note that even retrieving the script from IMDBs is just their best guess of what keywords you sent in.  Results never guaranteed.
+
 If used with the --intact and --save flag, this is actually a very easy way to download scripts rapidly.  
 
-However, it can also perform manipulation and analysis on the scripts such as alphabetizing the words (highly useful) or providing word frequency.
-
-## Why?
-
-Why not?
+The script can be stored in memory for additional text analysis such as word frequency.
 
 ## Usage
 
